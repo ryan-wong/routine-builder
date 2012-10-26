@@ -4,35 +4,22 @@
         <script type="text/javascript" src="./pdf.js"></script>
         <script type="text/javascript">
             //disable f5 and tab
-             window.addEventListener("keydown",
-            function(e){                
+            var keys = [];
+            window.addEventListener("keydown",
+            function(e){
+                keys[e.keyCode] = true;
                 switch(e.keyCode){
-                    case 116: e.preventDefault(); break; // Space
+                    case 116: case 9: e.preventDefault(); break; // Space
                     default: break; // do not block other keys
                 }
             },
             false);
-            $(document).delegate('textarea', 'keydown', function(e) { 
-                var keyCode = e.keyCode || e.which; 
-
-                if (keyCode == 9) { 
-                    e.preventDefault(); 
-                    var start = $(this).get(0).selectionStart;
-                    var end = $(this).get(0).selectionEnd;
-
-                    // set textarea value to: text before caret + tab + text after caret
-                    $(this).val($(this).val().substring(0, start)
-                        + "\t"
-                        + $(this).val().substring(end));
-
-                    // put caret at right position again
-                    $(this).get(0).selectionStart = 
-                        $(this).get(0).selectionEnd = start + 1;
-                } 
-            });
+            window.addEventListener('keyup',
+            function(e){
+                keys[e.keyCode] = false;
+            },
+            false);
             $(document).ready(function(){
-             
-                
                 $('#submit').click(function(){
                     var doc = new pdf();
                     doc.setProperties({
@@ -90,13 +77,15 @@
                         return start;
                     }
                 });
-            });            
+            });
+            
+            
         </script>
     </head>
     <body>
         <div>
             <center>
-                <center><h1>Routine Builder</h1></center>
+                <center><h1>Routine builder</h1></center>
                 <p>Function Name:</p><input type="text" id="function-name" size="100"/>
                 <p>Input:</p><input type="text" id="inputs" size="100"/>
                 <p>Outputs:</p><input type="text" id="outputs" size="100"/>
